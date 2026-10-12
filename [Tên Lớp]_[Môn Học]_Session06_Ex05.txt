@@ -1,0 +1,32 @@
+1. Thiết kế kiến trúc
+
+- Header: Tên và mục đích của script.
+- Comments: Giải thích các bước xử lý.
+- Logic: Lấy ngày hiện tại, đọc file log, lọc lỗi 404 và nối kết quả vào báo cáo.
+
+2. Mã nguồn auto_report.ps1
+
+Header: Tu dong bao cao loi 404
+
+Khai bao duong dan
+LogFile = "server.log"
+ReportFile = "report.txt"
+
+Hien thi tieu de
+Write-Host "=== AUTO LOG REPORT ===" -ForegroundColor Cyan
+
+Tao tieu de bao cao
+Today = Get-Date -Format "yyyy-MM-dd"
+"=== LOG REPORT DATE $Today ===" | Add-Content $ReportFile
+
+Doc file va loc loi 404
+if (Test-Path $LogFile) {
+    Select-String -Path $LogFile -Pattern "404" |
+        ForEach-Object { $_.Line } |
+        Add-Content $ReportFile
+
+    Write-Host "Da hoan thanh bao cao!" -ForegroundColor Green
+}
+else {
+    Write-Host "Khong tim thay file log!" -ForegroundColor Red
+}
